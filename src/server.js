@@ -10,6 +10,8 @@ import RadiumContainer from './containers/RadiumContainer';
 import { Provider } from 'react-redux';
 import routesContainer from "./routes";
 import url from "url";
+import Fs from 'fs';
+import _ from 'lodash';
 let routes = routesContainer;
 
 /**
@@ -41,6 +43,14 @@ server.register(
 		throw err;
 	}
 
+	Fs.readdirSync('src/api-routes').forEach((file) => {
+
+        _.each(require('./api-routes/' + file), (routes) => {
+			console.log(routes);
+            server.route(routes);
+        });
+    });
+
 	server.start(() => {
 		console.info("==> ✅  Server is listening");
 		console.info("==> 🌎  Go to " + server.info.uri.toLowerCase());
@@ -55,30 +65,6 @@ server.route({
 	path:    "/{params*}",
 	handler: {
 		file: (request) => "static" + request.path
-	}
-});
-
-/**
- * Endpoint that proxies all GitHub API requests to https://api.github.com.
- */
-server.route({
-	method: "GET",
-	path: "/api/github/{path*}",
-	handler: {
-		proxy: {
-			passThrough: true,
-			mapUri (request, callback) {
-				callback(null, url.format({
-					protocol: "https",
-					host:     "api.github.com",
-					pathname: request.params.path,
-					query:    request.query
-				}));
-			},
-			onResponse (err, res, request, reply, settings, ttl) {
-				reply(res);
-			}
-		}
 	}
 });
 
@@ -114,6 +100,7 @@ server.ext("onPreResponse", (request, reply) => {
 				<meta charset="utf-8">
 				<title>Hapi Universal Redux</title>
 				<link rel="shortcut icon" href="/favicon.ico">
+			    <link rel="stylesheet" href="/vendor/materialize.min.css">
 			</head>
 			<body>
 				<div id="react-root">${reactString}</div>
@@ -121,7 +108,10 @@ server.ext("onPreResponse", (request, reply) => {
 					window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}
 					window.__UA__ = ${JSON.stringify(request.headers['user-agent'])}
 				</script>
-				<script src=${webserver}/dist/client.js></script>
+				<script src="/vendor/jquery.min.js"></script>
+				<script src="/vendor/materialize.min.js"></script>
+				<script src="/vendor/lodash.min.js"></script>
+				<script src="${webserver}/dist/client.js"></script>
 			</body>
 		</html>`
 		);

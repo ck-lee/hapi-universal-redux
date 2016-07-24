@@ -76,24 +76,28 @@ const repositoryUrl = 'https://github.com/luandro/hapi-universal-redux';
  */
 export default ({children}) => (
 	<div>
-		<div style={styles.nav}>
-			<ul>
-				<li style={styles.list}><Link style={styles.navLink} to="/" activeClassName="active">Home</Link></li>
-				<li style={styles.list}><Link style={styles.navLink}  to="/about" activeClassName="active">About</Link></li>
-				<li style={styles.list}><iframe src="https://ghbtns.com/github-btn.html?user=Luandro&repo=hapi-universal-redux&type=star&count=true" frameBorder="0" scrolling="0" width="110" height="20" style={{float:"right"}}></iframe></li>
-			</ul>
-		</div>
-		<div style={styles.base}>
-			 <a style={styles.github} href={repositoryUrl}>
-				<img src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" />
-			</a>
+		<nav>
+            <div className="nav-wrapper  blue lighten-2">
+				<Link to="/" className="brand-logo">chur.io</Link>
+				<a href="#" data-activates="top-nav-bar" className="button-collapse"><i className="material-icons">menu</i></a>
+				<ul className="right hide-on-med-and-down">
+					<li><Link to="/" activeClassName="active">Home</Link></li>
+					<li><Link to="/about" activeClassName="active">About</Link></li>
+				</ul>
+				<ul className="side-nav" id="top-nav-bar">
+					<li><Link to="/" activeClassName="active">Home</Link></li>
+					<li><Link to="/about" activeClassName="active">About</Link></li>
+				</ul>
+            </div>
+        </nav>
+		<div style={styles.base} className="container">
 			<h1>
 				<img src="/logo.svg" alt="logo" />
 			</h1>
 			{/*
 			  * Pass props down to child Routes.
 			*/}
-			{cloneElement(children, Object.assign({}, {styles: styles, colors: colors }))}
+			{cloneElement(children, Object.assign({}, { styles: styles, colors: colors })) }
 		</div>
 	</div>
 )
